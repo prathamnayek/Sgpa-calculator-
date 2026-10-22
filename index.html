@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Smart Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-blue-600 px-6 py-8 text-center text-white">
+            <h1 class="text-3xl font-bold">SGPA Smart Calculator</h1>
+            <p class="mt-2 text-blue-100">Easily calculate your Semester Grade Point Average</p>
+        </div>
+
+        <div class="p-6 sm:p-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse" id="course-table">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200 text-gray-600 text-sm uppercase tracking-wider">
+                            <th class="py-3 pr-4">Course Name (Optional)</th>
+                            <th class="py-3 px-4">Credits</th>
+                            <th class="py-3 px-4">Grade</th>
+                            <th class="py-3 pl-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="course-body">
+                        <!-- Initial Rows -->
+                        <tr class="border-b border-gray-100 course-row">
+                            <td class="py-3 pr-4"><input type="text" placeholder="Course 1" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"></td>
+                            <td class="py-3 px-4"><input type="number" min="1" max="10" value="3" class="w-20 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border credit-input"></td>
+                            <td class="py-3 px-4">
+                                <select class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border grade-select">
+                                    <option value="10">O (10)</option>
+                                    <option value="9">E (9)</option>
+                                    <option value="8">A (8)</option>
+                                    <option value="7">B (7)</option>
+                                    <option value="6">C (6)</option>
+                                    <option value="5">D (5)</option>
+                                    <option value="0">F (0)</option>
+                                </select>
+                            </td>
+                            <td class="py-3 pl-4 text-center">
+                                <button type="button" class="text-red-500 hover:text-red-700 remove-btn" onclick="removeRow(this)">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 flex justify-between items-center">
+                <button type="button" onclick="addRow()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium">
+                    + Add Course
+                </button>
+                <button type="button" onclick="calculateSGPA()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-bold shadow-md">
+                    Calculate SGPA
+                </button>
+            </div>
+
+            <div id="result-container" class="mt-8 p-6 bg-blue-50 rounded-lg text-center hidden">
+                <h2 class="text-lg font-medium text-gray-700">Your Calculated SGPA</h2>
+                <div class="text-5xl font-extrabold text-blue-600 mt-2" id="sgpa-result">0.00</div>
+                <p class="text-sm text-gray-500 mt-2" id="credit-summary">Total Credits: 0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let courseCount = 1;
+
+        function addRow() {
+            courseCount++;
+            const tbody = document.getElementById('course-body');
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-100 course-row';
+            row.innerHTML = `
+                <td class="py-3 pr-4"><input type="text" placeholder="Course ${courseCount}" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"></td>
+                <td class="py-3 px-4"><input type="number" min="1" max="10" value="3" class="w-20 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border credit-input"></td>
+                <td class="py-3 px-4">
+                    <select class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border grade-select">
+                        <option value="10">O (10)</option>
+                        <option value="9">E (9)</option>
+                        <option value="8">A (8)</option>
+                        <option value="7">B (7)</option>
+                        <option value="6">C (6)</option>
+                        <option value="5">D (5)</option>
+                        <option value="0">F (0)</option>
+                    </select>
+                </td>
+                <td class="py-3 pl-4 text-center">
+                    <button type="button" class="text-red-500 hover:text-red-700 remove-btn" onclick="removeRow(this)">Remove</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function removeRow(btn) {
+            const rows = document.querySelectorAll('.course-row');
+            if (rows.length > 1) {
+                btn.closest('tr').remove();
+            } else {
+                alert("You must have at least one course.");
+            }
+        }
+
+        function calculateSGPA() {
+            const rows = document.querySelectorAll('.course-row');
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+
+            rows.forEach(row => {
+                const creditVal = parseFloat(row.querySelector('.credit-input').value);
+                const gradeVal = parseFloat(row.querySelector('.grade-select').value);
+
+                if (!isNaN(creditVal) && creditVal > 0) {
+                    totalCredits += creditVal;
+                    totalGradePoints += (creditVal * gradeVal);
+                }
+            });
+
+            const resultContainer = document.getElementById('result-container');
+            const sgpaResult = document.getElementById('sgpa-result');
+            const creditSummary = document.getElementById('credit-summary');
+
+            if (totalCredits > 0) {
+                const sgpa = (totalGradePoints / totalCredits).toFixed(2);
+                sgpaResult.textContent = sgpa;
+                creditSummary.textContent = \`Total Credits: \${totalCredits}\`;
+                resultContainer.classList.remove('hidden');
+            } else {
+                alert("Please enter valid credits for your courses.");
+            }
+        }
+    </script>
+</body>
+</html>
