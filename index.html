@@ -28,7 +28,6 @@
                         </tr>
                     </thead>
                     <tbody id="course-body">
-                        <!-- Initial Rows -->
                         <tr class="border-b border-gray-100 course-row">
                             <td class="py-3 pr-4"><input type="text" placeholder="Course 1" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"></td>
                             <td class="py-3 px-4"><input type="number" min="1" max="10" value="3" class="w-20 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border credit-input"></td>
@@ -76,24 +75,7 @@
             const tbody = document.getElementById('course-body');
             const row = document.createElement('tr');
             row.className = 'border-b border-gray-100 course-row';
-            row.innerHTML = `
-                <td class="py-3 pr-4"><input type="text" placeholder="Course ${courseCount}" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"></td>
-                <td class="py-3 px-4"><input type="number" min="1" max="10" value="3" class="w-20 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border credit-input"></td>
-                <td class="py-3 px-4">
-                    <select class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border grade-select">
-                        <option value="10">O (10)</option>
-                        <option value="9">E (9)</option>
-                        <option value="8">A (8)</option>
-                        <option value="7">B (7)</option>
-                        <option value="6">C (6)</option>
-                        <option value="5">D (5)</option>
-                        <option value="0">F (0)</option>
-                    </select>
-                </td>
-                <td class="py-3 pl-4 text-center">
-                    <button type="button" class="text-red-500 hover:text-red-700 remove-btn" onclick="removeRow(this)">Remove</button>
-                </td>
-            `;
+            row.innerHTML = '<td class="py-3 pr-4"><input type="text" placeholder="Course ' + courseCount + '" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"></td><td class="py-3 px-4"><input type="number" min="1" max="10" value="3" class="w-20 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border credit-input"></td><td class="py-3 px-4"><select class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border grade-select"><option value="10">O (10)</option><option value="9">E (9)</option><option value="8">A (8)</option><option value="7">B (7)</option><option value="6">C (6)</option><option value="5">D (5)</option><option value="0">F (0)</option></select></td><td class="py-3 pl-4 text-center"><button type="button" class="text-red-500 hover:text-red-700 remove-btn" onclick="removeRow(this)">Remove</button></td>';
             tbody.appendChild(row);
         }
 
@@ -128,7 +110,7 @@
             if (totalCredits > 0) {
                 const sgpa = (totalGradePoints / totalCredits).toFixed(2);
                 sgpaResult.textContent = sgpa;
-                creditSummary.textContent = \`Total Credits: \${totalCredits}\`;
+                creditSummary.textContent = "Total Credits: " + totalCredits;
                 resultContainer.classList.remove('hidden');
             } else {
                 alert("Please enter valid credits for your courses.");
